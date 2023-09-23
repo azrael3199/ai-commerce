@@ -1,23 +1,24 @@
 import React, { useContext, useEffect } from "react";
 import { AppContext } from "../../context/AppContext";
-import { useNavigate } from "react-router-dom";
+import api from "../../appwrite";
 
 const Home = () => {
-  const { currentUser, authenticateUser } = useContext(AppContext);
-  const navigate = useNavigate();
+  const { currentUser, endCurrentSession } = useContext(AppContext);
 
-  useEffect(() => {
-    if (!currentUser) {
-      navigate("/auth");
-    }
-  }, [currentUser]);
+  const handleLogout = () => {
+    api.deleteCurrentSession().then(() => {
+      endCurrentSession()
+    }).catch((err) => {
+      console.error("Error in logging out", err)
+    })
+  }
 
   return (
     <div className="home">
-      Welcome {currentUser.displayName}
+      Welcome {currentUser.name}
       <button
         onClick={() => {
-          authenticateUser(true);
+          handleLogout()
         }}
       >
         Logout

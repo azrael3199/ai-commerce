@@ -1,33 +1,39 @@
 import React, { createContext, useEffect, useState } from "react";
+import api from "../appwrite";
 
 export const AppContext = createContext({
   currentUser: null,
-  authenticateUser: () => {},
+  startSession: () => {},
+  endCurrentSession: () => {},
   isLoading: false,
   setIsLoading: () => {},
 });
-
-const dummyUser = {
-  username: "chinmay",
-  displayName: "Chinmay Ghungurde",
-};
 
 const AppProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const authenticateUser = (logout) => {
-    // DUMMY LOGIC: Should be replaced
-    if (logout) {
-      setCurrentUser(null);
-    } else {
-      setCurrentUser(dummyUser);
-    }
+  /**
+   * Run the useEffect on the first render of the app to initialize state based on whether a session already exists. i.e A user is logged in
+   */
+  useEffect(() => {
+    api.getAccount().then((user) => {
+      console.log(user)
+      setCurrentUser(user)
+    })
+  }, [])
+
+  const startSession = (user) => {
+    setCurrentUser(user);
   };
+
+  const endCurrentSession = () => {
+    setCurrentUser(null)
+  }
 
   return (
     <AppContext.Provider
-      value={{ currentUser, isLoading, authenticateUser, setIsLoading }}
+      value={{ currentUser, isLoading, startSession, endCurrentSession, setIsLoading }}
     >
       {children}
     </AppContext.Provider>

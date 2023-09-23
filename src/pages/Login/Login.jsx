@@ -1,12 +1,12 @@
 import React, { useContext, useEffect } from "react";
 import { AppContext } from "../../context/AppContext";
 import { useNavigate } from "react-router-dom";
+import api from "../../appwrite";
 
 const Login = () => {
-  const { currentUser, authenticateUser } = useContext(AppContext);
-  const navigate = useNavigate();
+  const { currentUser, startSession } = useContext(AppContext);
 
-  console.log("On login");
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (currentUser) {
@@ -14,12 +14,26 @@ const Login = () => {
     }
   }, [currentUser]);
 
+  const handleLogin = async (email="example@gmail.com", password="bullsh!doAlert2343@") => {
+    api.createSession(email, password).then(async () => {
+      try {
+        const user = await api.getAccount()
+        startSession(user)
+      } catch (err) {
+        throw err
+      }
+    }).catch((err) => {
+      // Log to a service
+      console.error(err)
+    })
+  }
+
   return (
     <div className="login-container">
       Login
       <button
         onClick={() => {
-          authenticateUser();
+          handleLogin()
         }}
       >
         Login

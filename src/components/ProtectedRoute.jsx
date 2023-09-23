@@ -1,9 +1,16 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { AppContext } from "../context/AppContext";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const ProtectedRoute = ({ children }) => {
   const { currentUser } = useContext(AppContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!currentUser) {
+      navigate("/auth");
+    }
+  }, [currentUser]);
 
   return currentUser ? <>{children}</> : <Navigate to="/auth" />;
 };

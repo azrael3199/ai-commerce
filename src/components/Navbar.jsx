@@ -21,7 +21,7 @@ import { dark } from "../themes";
 import api from "../appwrite";
 import config from "../config";
 
-const Navbar = ({ isCartOpen }) => {
+const Navbar = ({ isCartOpen, handleCartToggle }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const { currentUser, endCurrentSession, setLoading, setError } =
     useContext(AppContext);
@@ -82,11 +82,13 @@ const Navbar = ({ isCartOpen }) => {
           <ShoppingBasketOutlined
             sx={{ fontSize: 36, color: dark.accent.primary }}
           />
-          <Typography sx={{ fontSize: 24, color: dark.accent.highlight }}>
+          <Typography
+            sx={{ fontSize: 24, color: dark.accent.highlight, fontWeight: 500 }}
+          >
             {config.appName}
           </Typography>
         </Box>
-        <IconButton color="inherit">
+        <IconButton color="inherit" onClick={handleCartToggle}>
           {isCartOpen ? (
             <ShoppingCart sx={{ color: dark.text.hover, fontSize: 32 }} />
           ) : (

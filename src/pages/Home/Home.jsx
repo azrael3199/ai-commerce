@@ -7,10 +7,19 @@ import { Container } from "@mui/system";
 import api from "../../appwrite";
 import config from "../../config";
 import ProductCard from "../../components/ProductCard";
+import CartPanel from "../../components/CartPanel";
 
 const Home = () => {
   const { currentUser, setLoading, setError } = useContext(AppContext);
   const [products, setProducts] = useState([]);
+  const [isCartOpen, setIsCartOpen] = useState(false); // State to control cart panel
+
+  /**
+   * Handle Cart Toggle
+   */
+  const handleCartToggle = () => {
+    setIsCartOpen(!isCartOpen); // Toggle cart panel state
+  };
 
   /**
    * Load all items
@@ -20,7 +29,7 @@ const Home = () => {
     api
       .listDocuments(config.dbProductsId, config.collectionProductsId)
       .then((res) => {
-        console.log(res);
+        console.log(res.documents[0].$id);
         setProducts(res?.documents);
       })
       .catch((err) => setError({ message: err.message, type: "error" }))
@@ -38,7 +47,7 @@ const Home = () => {
         padding: 0,
       }}
     >
-      <Navbar />
+      <Navbar isCartOpen={isCartOpen} handleCartToggle={handleCartToggle} />
       <Container
         style={{
           backgroundColor: dark.background,
@@ -58,7 +67,8 @@ const Home = () => {
           /* Render your products here when available */
           products.map((product) => (
             <ProductCard
-              key={Math.random()}
+              key={product.$id}
+              productId={product.$id}
               productName={product.name}
               description={product.description}
               currency={product.currency}
@@ -73,6 +83,8 @@ const Home = () => {
           </Typography>
         )}
       </Container>
+      {/* CartPanel component */}
+      <CartPanel isOpen={isCartOpen} onClose={handleCartToggle} />
     </Container>
   );
 };

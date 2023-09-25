@@ -73,7 +73,7 @@ const Login = ({ setRegister, onAuth }) => {
             if (!user.emailVerification) {
               await api.verifyEmail();
             }
-            user.cartItems = [];
+            user.cartItems = {};
             onAuth(user);
             formik.resetForm();
           } catch (error) {

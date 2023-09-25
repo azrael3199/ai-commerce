@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import {
   Card,
   CardContent,
@@ -7,14 +7,51 @@ import {
   Button,
 } from "@mui/material";
 import { dark } from "../themes";
+import QuantitySelector from "./QuantitySelectory";
+import { AppContext } from "../context/AppContext";
 
 const ProductCard = ({
+  productId,
   productName,
   description,
   imageUrl,
   price,
   currency,
 }) => {
+  const { currentUser } = useContext(AppContext);
+  const [quantity, setQuantity] = useState(0);
+
+  const addItemToCart = () => {
+    setQuantity((q) => q + 1);
+    const currentCart = { ...currentUser.cartItems };
+    if (productId in currentCart) {
+      currentCart[productId].quantity += 1;
+      currentCart[productId].amount += price;
+    } else {
+      currentCart[productId] = {
+        quantity: 1,
+        amount: price,
+      };
+    }
+    currentUser.cartItems = currentCart;
+    console.log(currentUser.cartItems);
+  };
+
+  const removeItemFromCart = () => {
+    setQuantity((q) => q - 1);
+    const currentCart = { ...currentUser.cartItems };
+    if (productId in currentCart) {
+      if (quantity > 1) {
+        currentCart[productId].quantity -= 1;
+        currentCart[productId].amount -= price;
+      } else {
+        delete currentCart[productId];
+      }
+    }
+    currentUser.cartItems = currentCart;
+    console.log(currentUser.cartItems);
+  };
+
   return (
     <Card
       sx={{
@@ -77,9 +114,21 @@ const ProductCard = ({
         }}
       >
         {`${price.toFixed(2)} ${currency}`}
-        <Button variant="text" sx={{ color: dark.accent.highlight }}>
-          Add to Cart
-        </Button>
+        {quantity === 0 ? (
+          <Button
+            variant="text"
+            sx={{ color: dark.accent.highlight }}
+            onClick={() => addItemToCart()}
+          >
+            Add to Cart
+          </Button>
+        ) : (
+          <QuantitySelector
+            quantity={quantity}
+            addItemToCart={() => addItemToCart()}
+            removeItemFromCart={() => removeItemFromCart()}
+          />
+        )}
       </CardContent>
     </Card>
   );

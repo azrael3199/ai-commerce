@@ -38,7 +38,9 @@ export const AuthContainer = ({ children }) => {
           <ShoppingBasketOutlined
             sx={{ fontSize: 36, color: dark.accent.primary }}
           />
-          <Typography sx={{ fontSize: 36, color: dark.accent.highlight }}>
+          <Typography
+            sx={{ fontSize: 36, color: dark.accent.highlight, fontWeight: 500 }}
+          >
             {config.appName}
           </Typography>
         </Box>

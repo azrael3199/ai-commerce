@@ -6,6 +6,7 @@ import { AppContext } from "../../context/AppContext";
 import { dark } from "../../themes";
 import { ShoppingBasketOutlined } from "@mui/icons-material";
 import Register from "../../components/Register";
+import config from "../../config";
 
 export const AuthContainer = ({ children }) => {
   return (
@@ -37,8 +38,10 @@ export const AuthContainer = ({ children }) => {
           <ShoppingBasketOutlined
             sx={{ fontSize: 36, color: dark.accent.primary }}
           />
-          <Typography sx={{ fontSize: 36, color: dark.accent.highlight }}>
-            AI-Commerce
+          <Typography
+            sx={{ fontSize: 36, color: dark.accent.highlight, fontWeight: 500 }}
+          >
+            {config.appName}
           </Typography>
         </Box>
         {children}

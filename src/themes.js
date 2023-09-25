@@ -2,7 +2,8 @@ export const dark = {
   background: "#1E1E1E",
   backgroundHover: "#2A2A2A",
   card: {
-    background: "#3A4048",
+    background: "#3D444B",
+    backgroundSecondary: "#323038",
   },
   text: {
     primary: "#DEDEDE",
@@ -26,12 +27,12 @@ export const dark = {
     text: "#DEDEDE",
   },
   disabled: {
-    text: "#666666",
-    background: "#333333",
+    text: "#888888",
+    background: "#555555",
   },
   notification: {
     success: "#008000",
-    info: "#FFD700",
+    info: "#FFA500",
     error: "#DD2307",
   },
 };

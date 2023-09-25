@@ -48,7 +48,16 @@ const AppProvider = ({ children }) => {
         setError,
       }}
     >
-      {children}
+      <div
+        style={{
+          height: "100%",
+          width: "100%",
+          margin: "0px",
+          padding: "0px",
+        }}
+      >
+        {children}
+      </div>
       {error && (
         <ErrorPopup
           message={error.message}

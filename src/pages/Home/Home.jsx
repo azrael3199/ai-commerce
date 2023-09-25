@@ -10,9 +10,17 @@ import ProductCard from "../../components/ProductCard";
 import CartPanel from "../../components/CartPanel";
 
 const Home = () => {
-  const { currentUser, setLoading, setError } = useContext(AppContext);
+  const { currentUser, setLoading, setError, startSession } =
+    useContext(AppContext);
   const [products, setProducts] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false); // State to control cart panel
+
+  // Add cartItems
+  if (!!!currentUser.cartItems) {
+    const user = currentUser;
+    user.cartItems = {};
+    startSession(user);
+  }
 
   /**
    * Handle Cart Toggle

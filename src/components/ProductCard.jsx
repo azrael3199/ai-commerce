@@ -18,38 +18,43 @@ const ProductCard = ({
   price,
   currency,
 }) => {
-  const { currentUser } = useContext(AppContext);
+  const { currentUser, startSession } = useContext(AppContext);
   const [quantity, setQuantity] = useState(0);
 
   const addItemToCart = () => {
     setQuantity((q) => q + 1);
-    const currentCart = { ...currentUser.cartItems };
-    if (productId in currentCart) {
-      currentCart[productId].quantity += 1;
-      currentCart[productId].amount += price;
+    const newUser = { ...currentUser };
+    const newCartItems = { ...newUser.cartItems };
+    if (productId in newCartItems) {
+      newCartItems[productId].quantity += 1;
+      newCartItems[productId].amount += price;
     } else {
-      currentCart[productId] = {
+      newCartItems[productId] = {
+        name: productName,
         quantity: 1,
         amount: price,
+        price: price,
+        currency: currency,
       };
     }
-    currentUser.cartItems = currentCart;
-    console.log(currentUser.cartItems);
+    newUser.cartItems = { ...newCartItems };
+    startSession(newUser);
   };
 
   const removeItemFromCart = () => {
     setQuantity((q) => q - 1);
-    const currentCart = { ...currentUser.cartItems };
-    if (productId in currentCart) {
+    const newUser = { ...currentUser };
+    const newCartItems = { ...newUser.cartItems };
+    if (productId in newCartItems) {
       if (quantity > 1) {
-        currentCart[productId].quantity -= 1;
-        currentCart[productId].amount -= price;
+        newCartItems[productId].quantity -= 1;
+        newCartItems[productId].amount -= price;
       } else {
-        delete currentCart[productId];
+        delete newCartItems[productId];
       }
     }
-    currentUser.cartItems = currentCart;
-    console.log(currentUser.cartItems);
+    newUser.cartItems = { ...newCartItems };
+    startSession(newUser);
   };
 
   return (

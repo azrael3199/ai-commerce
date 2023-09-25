@@ -18,7 +18,6 @@ import { dark } from "../themes";
 
 const Register = ({ setLogin }) => {
   const { setError, setLoading } = useContext(AppContext);
-  const navigate = useNavigate();
   /**
    * Initial form values and validation schema.
    */
@@ -97,7 +96,7 @@ const Register = ({ setLogin }) => {
             });
             setTimeout(() => {
               formik.resetForm();
-              navigate("/auth");
+              setLogin();
             }, 4000);
           } catch (error) {
             throw error;

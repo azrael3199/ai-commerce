@@ -3,6 +3,7 @@ export const dark = {
   backgroundHover: "#2A2A2A",
   card: {
     background: "#3A4048",
+    backgroundSecondary: "#323038",
   },
   text: {
     primary: "#DEDEDE",
@@ -31,7 +32,7 @@ export const dark = {
   },
   notification: {
     success: "#008000",
-    info: "#FFD700",
+    info: "#FFA500",
     error: "#DD2307",
   },
 };

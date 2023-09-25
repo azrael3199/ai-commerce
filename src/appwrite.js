@@ -58,16 +58,10 @@ let api = {
     return api.provider().account.deleteSession("current");
   },
 
-  createDocument: (databaseId, collectionId, data, permissions) => {
+  createDocument: (databaseId, collectionId, data) => {
     return api
       .provider()
-      .database.createDocument(
-        databaseId,
-        collectionId,
-        "unique()",
-        data,
-        permissions
-      );
+      .database.createDocument(databaseId, collectionId, ID.unique(), data);
   },
 
   listDocuments: (databaseId, collectionId) => {

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -20,6 +20,12 @@ const ProductCard = ({
 }) => {
   const { currentUser, startSession } = useContext(AppContext);
   const [quantity, setQuantity] = useState(0);
+
+  useEffect(() => {
+    if (Object.values(currentUser.cartItems).length === 0) {
+      setQuantity(0);
+    }
+  }, [currentUser]);
 
   const addItemToCart = () => {
     setQuantity((q) => q + 1);

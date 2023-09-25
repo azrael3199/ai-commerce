@@ -3,11 +3,62 @@ import { Box, Button, Drawer, Typography } from "@mui/material";
 import { dark } from "../themes";
 import { AppContext } from "../context/AppContext";
 import ProductCapsule from "./ProductCapsule";
+import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import api from "../appwrite";
+import config from "../config";
 
 const CartPanel = ({ isOpen, onClose }) => {
-  const { currentUser } = useContext(AppContext);
-  console.log(currentUser.cartItems);
+  const { currentUser, setLoading, setError, startSession } =
+    useContext(AppContext);
+  const stripe = useStripe();
+  const elements = useElements();
+
   const cartItems = Object.values(currentUser.cartItems);
+
+  const mockStripePayment = async () => {
+    // Simulate a Stripe payment request
+    await new Promise((resolve) => setTimeout(resolve, 5000)); // Simulate a delay
+
+    // Mock a successful payment response
+    return { token: "mock-stripe-token" };
+  };
+
+  const handleCheckout = async () => {
+    if (!stripe || !elements) return;
+
+    try {
+      setLoading("Processing Payment");
+
+      // Simulate a payment request
+      const { token } = await mockStripePayment();
+      console.log("Received token:", token);
+      const newOrder = {
+        userEmail: currentUser.email,
+        cartItems: JSON.stringify(currentUser.cartItems),
+        totalAmount: cartItems
+          .map((item) => item.amount)
+          .reduce((tot, cur) => (tot += cur))
+          .toFixed(2),
+        currency: cartItems[0].currency,
+      };
+
+      await api.createDocument(
+        config.dbProductsId,
+        config.collectionOrdersId,
+        newOrder
+      );
+
+      setError({ message: "Order placed successfully", type: "success" });
+      const newUser = { ...currentUser };
+      newUser.cartItems = {};
+      startSession(newUser);
+    } catch (error) {
+      console.log(error.message);
+      setError({ message: error.message, type: "error" });
+    } finally {
+      setLoading(null);
+    }
+  };
 
   return (
     <Drawer anchor="right" open={isOpen} onClose={onClose}>
@@ -17,6 +68,7 @@ const CartPanel = ({ isOpen, onClose }) => {
         display="flex"
         flexDirection="column"
         sx={{ padding: "16px", width: "30vw", height: "100%" }}
+        gap={1}
       >
         <Typography variant="h5" fontWeight="bold" color={dark.text.secondary}>
           Your Cart
@@ -48,6 +100,7 @@ const CartPanel = ({ isOpen, onClose }) => {
             )}
             {cartItems.map((item) => (
               <ProductCapsule
+                key={Math.random()}
                 productName={item.name}
                 quantity={item.quantity}
                 productPrice={item.price}
@@ -65,12 +118,12 @@ const CartPanel = ({ isOpen, onClose }) => {
                 Total Cost:{" "}
                 {`${cartItems
                   .map((item) => item.amount)
-                  .reduce((tot, cur) => (tot += cur))} ${
-                  Object.values(cartItems)[0].currency
-                }`}
+                  .reduce((tot, cur) => (tot += cur))
+                  .toFixed(2)} ${Object.values(cartItems)[0].currency}`}
               </Typography>
             )}
           </Box>
+          <CardElement />
           <Button
             variant="filled"
             sx={{
@@ -83,6 +136,7 @@ const CartPanel = ({ isOpen, onClose }) => {
               },
             }}
             disabled={cartItems.length === 0}
+            onClick={() => handleCheckout()}
           >
             Checkout
           </Button>

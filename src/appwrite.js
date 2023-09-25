@@ -38,6 +38,22 @@ let api = {
       .account.createVerification(location.origin + "/verifyEmail");
   },
 
+  confirmVerification: (userId, secret) => {
+    return api.provider().account.updateVerification(userId, secret);
+  },
+
+  changePassword: (email) => {
+    return api
+      .provider()
+      .account.createRecovery(email, location.origin + "/changePassword");
+  },
+
+  verifyChangePassword: (userId, secret, password) => {
+    return api
+      .provider()
+      .account.updateRecovery(userId, secret, password, password);
+  },
+
   deleteCurrentSession: () => {
     return api.provider().account.deleteSession("current");
   },

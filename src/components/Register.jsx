@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import {
   Box,
@@ -16,9 +16,9 @@ import { LockOutlined } from "@mui/icons-material";
 import api from "../appwrite";
 import { dark } from "../themes";
 
-const Register = ({ setLogin, onAuth }) => {
+const Register = ({ setLogin }) => {
   const { setError, setLoading } = useContext(AppContext);
-
+  const navigate = useNavigate();
   /**
    * Initial form values and validation schema.
    */
@@ -91,16 +91,21 @@ const Register = ({ setLogin, onAuth }) => {
         )
         .then(async () => {
           try {
-            const user = await api.getAccount();
-            onAuth(user);
-            formik.resetForm();
+            setError({
+              message: "User created successfully. Redirecting to login...",
+              type: "success",
+            });
+            setTimeout(() => {
+              formik.resetForm();
+              navigate("/auth");
+            }, 4000);
           } catch (error) {
             throw error;
           }
         })
         .catch((error) => {
           console.log(error.message);
-          setError(error.message);
+          setError({ message: error.message, type: "error" });
         })
         .finally(() => {
           setLoading(null);

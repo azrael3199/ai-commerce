@@ -51,10 +51,11 @@ const AppProvider = ({ children }) => {
       {children}
       {error && (
         <ErrorPopup
-          message={error}
+          message={error.message}
           reset={() => {
             setError(null);
           }}
+          type={error.type}
         />
       )}
       {loading && <LoadingOverlay loadingMessage={loading} />}

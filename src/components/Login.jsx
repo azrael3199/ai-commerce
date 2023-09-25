@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import {
@@ -63,13 +63,16 @@ const Login = ({ setRegister, onAuth }) => {
         return result;
       }, {});
 
-      setLoading("Loading");
+      setLoading("Logging in ...");
       api
         .createSession(trimmedValues.email, trimmedValues.password)
         .then(async () => {
           try {
             const user = await api.getAccount();
             console.log(user);
+            if (!user.emailVerification) {
+              await api.verifyEmail();
+            }
             onAuth(user);
             formik.resetForm();
           } catch (error) {
@@ -78,13 +81,37 @@ const Login = ({ setRegister, onAuth }) => {
         })
         .catch((error) => {
           console.log(error.message);
-          setError(error.message);
+          setError({ message: error.message, type: "error" });
         })
         .finally(() => {
           setLoading(null);
         });
     },
   });
+
+  const handleChangePassword = () => {
+    setLoading("");
+    const recoveryEmail = prompt("Enter your email").trim();
+    if (recoveryEmail) {
+      api
+        .changePassword(recoveryEmail)
+        .then((res) => {
+          if (res) {
+            setError({
+              message:
+                "Click on the link sent to your email to reset the password",
+              type: "info",
+            });
+          } else {
+            setError({ message: "Some error occurred", type: "error" });
+          }
+        })
+        .catch((err) => {
+          setError({ message: err.message, type: "error" });
+        });
+    } else {
+    }
+  };
 
   return (
     <Box width="100%">
@@ -196,27 +223,22 @@ const Login = ({ setRegister, onAuth }) => {
         >
           Sign In
         </Button>
-        <Grid container>
-          <Grid item xs>
-            <Link
-              component={RouterLink}
-              to="/forgot-password"
-              variant="body2"
-              sx={{ color: "#5BC0EB" }}
-            >
-              Forgot password?
-            </Link>
-          </Grid>
-          <Grid item>
-            <Link
-              onClick={() => setRegister()}
-              variant="body2"
-              sx={{ color: "#5BC0EB" }}
-            >
-              Don't have an account? Sign Up
-            </Link>
-          </Grid>
-        </Grid>
+        <Box display="flex" flexDirection="column" alignItems="center" gap={2}>
+          <Link
+            variant="body2"
+            sx={{ color: "#5BC0EB" }}
+            onClick={() => handleChangePassword()}
+          >
+            Forgot password?
+          </Link>
+          <Link
+            onClick={() => setRegister()}
+            variant="body2"
+            sx={{ color: "#5BC0EB" }}
+          >
+            Don't have an account? Sign Up
+          </Link>
+        </Box>
       </Box>
     </Box>
   );

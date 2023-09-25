@@ -7,18 +7,7 @@ import { dark } from "../../themes";
 import { ShoppingBasketOutlined } from "@mui/icons-material";
 import Register from "../../components/Register";
 
-const Authentication = () => {
-  const navigate = useNavigate();
-  const { currentUser, startSession } = useContext(AppContext);
-
-  const [isLogin, setLogin] = useState(true);
-
-  useEffect(() => {
-    if (currentUser) {
-      navigate("/");
-    }
-  }, [currentUser]);
-
+export const AuthContainer = ({ children }) => {
   return (
     <Container
       component="main"
@@ -52,13 +41,32 @@ const Authentication = () => {
             AI-Commerce
           </Typography>
         </Box>
-        {isLogin ? (
-          <Login setRegister={() => setLogin(false)} onAuth={startSession} />
-        ) : (
-          <Register setLogin={() => setLogin(true)} onAuth={startSession} />
-        )}
+        {children}
       </Paper>
     </Container>
+  );
+};
+
+const Authentication = () => {
+  const navigate = useNavigate();
+  const { currentUser, startSession } = useContext(AppContext);
+
+  const [isLogin, setLogin] = useState(true);
+
+  useEffect(() => {
+    if (currentUser) {
+      navigate("/");
+    }
+  }, [currentUser]);
+
+  return (
+    <AuthContainer>
+      {isLogin ? (
+        <Login setRegister={() => setLogin(false)} onAuth={startSession} />
+      ) : (
+        <Register setLogin={() => setLogin(true)} onAuth={startSession} />
+      )}
+    </AuthContainer>
   );
 };
 

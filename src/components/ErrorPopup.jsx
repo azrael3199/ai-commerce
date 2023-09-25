@@ -4,7 +4,13 @@ import CloseIcon from "@mui/icons-material/Close";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import { dark } from "../themes";
 
-export default function ErrorPopup({ message, reset }) {
+const COLORS = {
+  success: dark.notification.success,
+  info: dark.notification.info,
+  error: dark.notification.error,
+};
+
+export default function ErrorPopup({ message, reset, type }) {
   const [show, setShow] = useState(!!message);
 
   console.log(!!message);
@@ -26,6 +32,10 @@ export default function ErrorPopup({ message, reset }) {
     }
   };
 
+  const getColor = (type) => {
+    return COLORS[type];
+  };
+
   return (
     <Snackbar
       open={show}
@@ -34,7 +44,7 @@ export default function ErrorPopup({ message, reset }) {
       onExited={handleAnimationEnd}
       anchorOrigin={{ vertical: "top", horizontal: "center" }} // Move to top-center
       sx={{
-        backgroundColor: dark.notification.error,
+        backgroundColor: getColor(type),
         borderRadius: "8px",
         padding: "8px 12px",
       }}

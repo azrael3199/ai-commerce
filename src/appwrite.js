@@ -32,6 +32,12 @@ let api = {
     return api.provider().account.createEmailSession(email, password);
   },
 
+  verifyEmail: () => {
+    return api
+      .provider()
+      .account.createVerification(location.origin + "/verifyEmail");
+  },
+
   deleteCurrentSession: () => {
     return api.provider().account.deleteSession("current");
   },

@@ -13,9 +13,9 @@ const ProductCapsule = ({
     <Box
       display="flex"
       p={2}
-      maxWidth="95%"
-      minWidth="95%"
-      width="95%"
+      maxWidth="100%"
+      minWidth="80%"
+      width="100%"
       sx={{ backgroundColor: dark.card.background, borderRadius: "8px", p: 0 }}
     >
       <Box
@@ -54,7 +54,7 @@ const ProductCapsule = ({
         display="flex"
         flexDirection="column"
         flex={1}
-        alignItems="flex-start"
+        alignItems="center"
         minWidth="43%"
         maxWidth="43%"
         width="43%"
@@ -78,6 +78,7 @@ const ProductCapsule = ({
         <Typography
           fontSize={16}
           fontWeight={500}
+          textAlign="center"
           py="4px"
           color={dark.text.primary}
         >

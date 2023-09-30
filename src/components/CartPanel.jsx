@@ -17,7 +17,7 @@ const CartPanel = ({ isOpen, onClose }) => {
 
   const mockStripePayment = async () => {
     // Simulate a Stripe payment request
-    await new Promise((resolve) => setTimeout(resolve, 5000)); // Simulate a delay
+    await new Promise((resolve) => setTimeout(resolve, 4000)); // Simulate a delay
 
     // Mock a successful payment response
     return { token: "mock-stripe-token" };
@@ -31,7 +31,6 @@ const CartPanel = ({ isOpen, onClose }) => {
 
       // Simulate a payment request
       const { token } = await mockStripePayment();
-      console.log("Received token:", token);
       const newOrder = {
         userEmail: currentUser.email,
         cartItems: JSON.stringify(currentUser.cartItems),
@@ -47,6 +46,8 @@ const CartPanel = ({ isOpen, onClose }) => {
         config.collectionOrdersId,
         newOrder
       );
+
+      console.log("Received token:", token);
 
       setError({ message: "Order placed successfully", type: "success" });
       const newUser = { ...currentUser };

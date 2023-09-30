@@ -6,7 +6,7 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite serve",
-    "test": "jest",
+    "test": "jest --clearCache | jest",
     "coverage": "jest --coverage"
   },
   "repository": {

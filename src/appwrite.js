@@ -1,7 +1,7 @@
 import { Client as Appwrite, Databases, Account, ID } from "appwrite";
 import config from "./config";
 
-let api = {
+const api = {
   sdk: null,
 
   provider: () => {

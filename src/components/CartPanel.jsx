@@ -17,7 +17,7 @@ const CartPanel = ({ isOpen, onClose }) => {
 
   const mockStripePayment = async () => {
     // Simulate a Stripe payment request
-    await new Promise((resolve) => setTimeout(resolve, 5000)); // Simulate a delay
+    await new Promise((resolve) => setTimeout(resolve, 4000)); // Simulate a delay
 
     // Mock a successful payment response
     return { token: "mock-stripe-token" };
@@ -31,7 +31,6 @@ const CartPanel = ({ isOpen, onClose }) => {
 
       // Simulate a payment request
       const { token } = await mockStripePayment();
-      console.log("Received token:", token);
       const newOrder = {
         userEmail: currentUser.email,
         cartItems: JSON.stringify(currentUser.cartItems),
@@ -47,6 +46,8 @@ const CartPanel = ({ isOpen, onClose }) => {
         config.collectionOrdersId,
         newOrder
       );
+
+      console.log("Received token:", token);
 
       setError({ message: "Order placed successfully", type: "success" });
       const newUser = { ...currentUser };
@@ -67,7 +68,7 @@ const CartPanel = ({ isOpen, onClose }) => {
         backgroundColor={dark.card.backgroundSecondary}
         display="flex"
         flexDirection="column"
-        sx={{ padding: "16px", width: "30vw", height: "100%" }}
+        sx={{ padding: "16px", width: "50vw", height: "100%" }}
         gap={1}
       >
         <Typography variant="h5" fontWeight="bold" color={dark.text.secondary}>
@@ -86,6 +87,7 @@ const CartPanel = ({ isOpen, onClose }) => {
             justifyContent="center"
             alignItems="center"
             flexDirection="column"
+            width="100%"
             flex={1}
             gap={2}
           >

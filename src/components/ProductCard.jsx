@@ -7,7 +7,7 @@ import {
   Button,
 } from "@mui/material";
 import { dark } from "../themes";
-import QuantitySelector from "./QuantitySelectory";
+import QuantitySelector from "./QuantitySelector";
 import { AppContext } from "../context/AppContext";
 
 const ProductCard = ({
